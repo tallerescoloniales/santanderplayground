@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Santander Playground | Cartografías lúdicas en Santander</title>
+  <meta name="description" content="Santander Playground convierte colegio, barrio y parque en espacios para jugar, explorar y construir. Descubre las Cartografías Lúdicas de Santander.">
+  <meta name="theme-color" content="#1b2140">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:title" content="Santander Playground · Cartografías Lúdicas">
+  <meta property="og:description" content="Una ciudad para jugar, explorar y construir conectando colegio, barrio y parque en Santander.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playwrite+NO:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="vendor/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+  <noscript><style>.spg-reveal { opacity: 1; transform: none; }</style></noscript>
+</head>
+<body>
+
+  <div class="spg-progress" aria-hidden="true"><span id="spg-progress-bar"></span></div>
+
+  <header class="spg-header" id="top">
+    <div class="spg-inner spg-header-in">
+      <a class="spg-logo" href="#top" aria-label="Santander Playground, volver arriba">
+        <span class="spg-logo-top">Santander</span>
+        <span class="spg-logo-bot">PLAYGROUND</span>
+      </a>
+      <nav class="spg-nav" aria-label="Principal">
+        <a href="#intro">El proyecto</a>
+        <a href="#tramas">Tramas</a>
+        <a href="#actividades">Qué hacemos</a>
+        <a href="#participa">Participa</a>
+        <a href="#equipo">Equipo</a>
+        <a href="#faq">FAQ</a>
+        <a class="spg-btn spg-btn-solid spg-nav-cta" href="https://forms.gle/bgJvMooXkGXMsoPY9" target="_blank" rel="noopener">Inscríbete</a>
+      </nav>
+      <button class="spg-hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="spg-overlay">
+        <span class="spg-hamburger-lines"><i></i><i></i><i></i></span>
+        <span class="spg-hamburger-txt">Menú</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="spg-overlay" id="spg-overlay" aria-hidden="true">
+    <button class="spg-overlay-close" aria-label="Cerrar menú">Cerrar</button>
+    <nav class="spg-overlay-nav" aria-label="Menú móvil">
+      <a href="#intro">El proyecto</a>
+      <a href="#tramas">Tramas</a>
+      <a href="#actividades">Qué hacemos</a>
+      <a href="#participa">Participa</a>
+      <a href="#equipo">Equipo</a>
+      <a href="#faq">FAQ</a>
+      <a class="spg-btn spg-btn-solid spg-overlay-cta" href="https://forms.gle/bgJvMooXkGXMsoPY9" target="_blank" rel="noopener">Inscríbete</a>
+    </nav>
+    <div class="spg-overlay-social">
+      <a href="https://www.instagram.com/santanderplayground" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/santanderplayground/" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://wa.me/34625039565" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+  </div>
+
+  <main>
+
+    <section class="spg-hero" aria-label="Portada">
+      <div class="spg-carousel spg-carousel-hero" data-carousel>
+        <div class="spg-carousel-track">
+          <figure class="spg-carousel-item is-active"><img src="img/carrusel hero/20260902_130438.jpg" alt="Juego y exploración en Santander Playground" fetchpriority="high"><figcaption><strong>Una ciudad para jugar</strong><span>Explorar, imaginar y transformar nuestros espacios cotidianos.</span></figcaption></figure>
+          <figure class="spg-carousel-item"><img src="img/carrusel hero/20260902_130531.jpg" alt="Construcción colectiva en Santander Playground"><figcaption><strong>Construir juntos</strong><span>Materiales, ideas y muchas formas de crear.</span></figcaption></figure>
+          <figure class="spg-carousel-item"><img src="img/carrusel hero/20260902_135331.jpg" alt="Exploración del territorio urbano en Santander"><figcaption><strong>El territorio es nuestro patio</strong><span>Colegio, barrio y parque conectados.</span></figcaption></figure>
+          <figure class="spg-carousel-item"><img src="img/carrusel hero/IMG_20220225_125417.jpg" alt="Niños jugando con piezas sueltas"><figcaption><strong>Jugar es descubrir</strong><span>Una experiencia abierta a la curiosidad de la infancia.</span></figcaption></figure>
+          <figure class="spg-carousel-item"><img src="img/carrusel hero/IMG_20220812_131611.jpg" alt="Actividad de juego en un espacio público"><figcaption><strong>La calle también juega</strong><span>Hacemos visibles nuevas posibilidades para el barrio.</span></figcaption></figure>
+          <figure class="spg-carousel-item"><img src="img/carrusel hero/IMG_20241116_144423.jpg" alt="Experiencia de construcción y juego"><figcaption><strong>Cartografías lúdicas</strong><span>El camino que conecta los enclaves.</span></figcaption></figure>
+        </div>
+        <button class="spg-carousel-arrow spg-carousel-prev" aria-label="Imagen anterior">‹</button>
+        <button class="spg-carousel-arrow spg-carousel-next" aria-label="Imagen siguiente">›</button>
+        <div class="spg-carousel-dots">
+          <button class="spg-carousel-dot is-active" aria-label="Imagen 1"></button>
+          <button class="spg-carousel-dot" aria-label="Imagen 2"></button>
+          <button class="spg-carousel-dot" aria-label="Imagen 3"></button>
+          <button class="spg-carousel-dot" aria-label="Imagen 4"></button>
+          <button class="spg-carousel-dot" aria-label="Imagen 5"></button>
+          <button class="spg-carousel-dot" aria-label="Imagen 6"></button>
+        </div>
+      </div>
+      <div class="spg-hero-shade" aria-hidden="true"></div>
+      <div class="spg-inner spg-hero-in">
+        <div class="spg-hero-copy spg-reveal">
+          <p class="spg-kicker">
+            <span class="spg-sticker spg-sticker-yellow">Coloniales</span>
+            <span class="spg-sticker spg-sticker-cyan">Espacios de aprendizaje</span>
+            <span class="spg-sticker spg-sticker-paper">Santander</span>
+          </p>
+          <h1>
+            <span class="spg-stencil-accent">Santander</span><br>
+            PLAYGROUND
+          </h1>
+          <p class="spg-hero-sub">CARTOGRAFÍAS LÚDICAS · EDICIÓN 2026</p>
+          <p class="spg-hand spg-hero-hand">Una ciudad para jugar, explorar y descubrir.</p>
+          <p class="spg-chips" aria-label="Tres enclaves">
+            <span>01 · Colegio</span>
+            <span>02 · Barrio</span>
+            <span>03 · Parque</span>
+          </p>
+          <div class="spg-actions">
+            <a class="spg-btn spg-btn-solid" href="https://forms.gle/bgJvMooXkGXMsoPY9" target="_blank" rel="noopener">Inscríbete</a>
+            <a class="spg-btn spg-btn-paper" href="#tramas">Descubre las tramas</a>
+          </div>
+        </div>
+      </div>
+      <a class="spg-scroll-hint" href="#intro" aria-label="Bajar a la introducción">
+        <span>Bajar</span>
+        <i></i>
+      </a>
+    </section>
+
+    <div class="spg-marquee" aria-hidden="true">
+      <div class="spg-marquee-track">
+        <span>Juego</span><i></i><span>Exploración</span><i></i><span>Construcción</span><i></i>
+        <span>Colegio</span><i></i><span>Barrio</span><i></i><span>Parque</span><i></i>
+        <span>Santander</span><i></i><span>Cartografías lúdicas</span><i></i>
+      </div>
+    </div>
+
+    <section id="intro" class="spg-section">
+      <div class="spg-inner">
+        <p class="spg-lead spg-lead-big spg-reveal">
+          <strong>Santander Playground: Cartografías Lúdicas</strong> es una experiencia que invita a niñas y
+          niños a <span class="spg-accent">explorar, jugar, imaginar y transformar</span> los espacios que
+          forman parte de su vida cotidiana, y a las personas adultas a observar, participar y acompañar en
+          ese recorrido.
+        </p>
+      </div>
+    </section>
+
+    <section class="spg-section spg-section-alt">
+      <div class="spg-inner">
+        <div class="spg-head spg-reveal">
+          <span class="spg-num">01 / El proyecto</span>
+          <h2 class="spg-h2">
+            <span class="spg-accent">3 TRAMAS LÚDICAS</span><br>
+            9 ENCLAVES
+          </h2>
+        </div>
+        <div class="spg-big-lines spg-reveal">
+          <span>Tres barrios.</span>
+          <span>Tres colegios.</span>
+          <span>Tres parques.</span>
+        </div>
+        <p class="spg-big-quote spg-reveal"><span class="spg-hand">El camino que conecta los enclaves.</span></p>
+        <h3 class="spg-h3 spg-reveal">¿Qué es una trama lúdica?</h3>
+        <p class="spg-lead spg-reveal">
+          Las tramas lúdicas son los <strong>recorridos cotidianos</strong> que conectan tres enclaves propios
+          de la vida infantil —<span class="spg-accent">escuela, barrio y parque</span>—, entendiendo estos
+          espacios y los trayectos que los unen como un único hábitat de juego, aprendizaje y autonomía infantil.
+        </p>
+        <p class="spg-lead spg-reveal">Cada trama lúdica pertenece a un barrio y conecta tres enclaves cercanos:</p>
+        <div class="spg-grid3">
+          <article class="spg-card spg-reveal" style="--chip: var(--spg-fucsia); --delay: 0s">
+            <span class="spg-chip">01 · Escuela</span>
+            <span class="spg-card-icon" aria-hidden="true"><img src="img/cole mirones domo.jpg" alt=""></span>
+            <h3>El colegio como eje</h3>
+            <p>
+              Durante una semana compartiremos la experiencia con sus alumnos para explorar otras formas de
+              aprender, jugar y relacionarse con el espacio.
+            </p>
+            <p><em>El último día, por la tarde, la experiencia se abrirá también a las familias.</em></p>
+          </article>
+          <article class="spg-card spg-reveal" style="--chip: var(--spg-yellow); --delay: .1s">
+            <span class="spg-chip">02 · Barrio</span>
+            <span class="spg-card-icon" aria-hidden="true"><img src="img/toma la calle.jpg" alt=""></span>
+            <h3>La calle como encuentro</h3>
+            <p>
+              Buscaremos una zona urbana próxima al colegio —una calle, plaza, espacio degradado o lugar con
+              potencial de juego— donde desarrollar parte de la experiencia.
+            </p>
+          </article>
+          <article class="spg-card spg-reveal" style="--chip: var(--spg-cyan); --delay: .2s">
+            <span class="spg-chip">03 · Parque</span>
+            <span class="spg-card-icon" aria-hidden="true"><img src="img/parque de las llamas.jpg" alt=""></span>
+            <h3>El parque como juego libre</h3>
+            <p>
+              Terminaremos la trama en el parque o plaza más cercano al colegio con una jornada de juego libre
+              en familia.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+<section id="tramas" class="spg-section">
+      <div class="spg-inner">
+        <div class="spg-head spg-reveal">
+          <span class="spg-num">02 / La cartografía</span>
+          <h2 class="spg-h2">UNA CARTOGRAFÍA<br>QUE CRECE<span class="spg-accent">.</span></h2>
+          <p class="spg-hand spg-head-hand">Santander se dibuja jugando.</p>
+        </div>
+        <p class="spg-lead spg-reveal">
+          Cada trama lúdica incorpora nuevos lugares, recorridos y experiencias. A medida que avancemos, el
+          mapa irá creciendo y nos permitirá descubrir Santander desde una perspectiva diferente:
+          <strong>la mirada de quienes la recorren cada día.</strong>
+        </p>
+        <div class="spg-map-block spg-reveal">
+          <div class="spg-head spg-map-head">
+            <span class="spg-num">50 CENTROS EDUCATIVOS</span>
+            <h3 class="spg-h3">TODA LA CIUDAD ES EL TERRITORIO</h3>
+          </div>
+          <p class="spg-lead spg-map-lead">Tu cole también puede estar en el mapa: escríbenos y se hará sede.</p>
+          <div id="spg-map" class="spg-map" role="application" aria-label="Mapa de los centros educativos de Santander"></div>
+          <p class="spg-map-note">
+            <span class="spg-legend-hex" aria-hidden="true"></span> Centros educativos de Santander ·
+            Pulsa un hexágono para ver el centro.
+          </p>
+        </div>
+        <div class="spg-head spg-trama-head spg-reveal">
+          <span class="spg-num">Las tramas</span>
+          <h3 class="spg-h3"><span class="spg-accent">LAS TRAMAS LÚDICAS</span></h3>
+          <p class="spg-hand spg-head-hand">3 barrios · 9 enclaves · 1 cartografía</p>
+        </div>
+        <div class="spg-grid3 spg-tramas">
+          <article class="spg-card spg-trama spg-reveal" style="--chip: var(--spg-fucsia); --delay: 0s">
+            <span class="spg-chip">Trama lúdica I</span>
+            <figure class="spg-trama-img"><img src="img/cole.jpg" alt="Actividad en un colegio"></figure>
+            <h3><span class="spg-trama-entre">[Barrio / Calle / Zona]</span></h3>
+            <div class="spg-trama-rows">
+              <p><span class="spg-t-row">🏫 Colegio</span><em class="spg-t-val">[En confirmación]</em></p>
+              <p><span class="spg-t-row">📍 Zona urbana</span><em class="spg-t-val">[En confirmación]</em></p>
+              <p><span class="spg-t-row">🌳 Parque / plaza</span><em class="spg-t-val">[En confirmación]</em></p>
+            </div>
+            <a class="spg-btn spg-btn-ghost" href="#spg-map">Ver trama</a>
+          </article>
+          <article class="spg-card spg-trama spg-reveal" style="--chip: var(--spg-yellow); --delay: .1s">
+            <span class="spg-chip">Trama lúdica II</span>
+            <figure class="spg-trama-img"><img src="img/Calle.jpg" alt="Juego en una calle del barrio"></figure>
+            <h3><span class="spg-trama-entre">[Barrio / Calle / Zona]</span></h3>
+            <div class="spg-trama-rows">
+              <p><span class="spg-t-row">🏫 Colegio</span><em class="spg-t-val">[En confirmación]</em></p>
+              <p><span class="spg-t-row">📍 Zona urbana</span><em class="spg-t-val">[En confirmación]</em></p>
+              <p><span class="spg-t-row">🌳 Parque / plaza</span><em class="spg-t-val">[En confirmación]</em></p>
+            </div>
+            <a class="spg-btn spg-btn-ghost" href="#spg-map">Ver trama</a>
+          </article>
+          <article class="spg-card spg-trama spg-reveal" style="--chip: var(--spg-cyan); --delay: .2s">
+            <span class="spg-chip">Trama lúdica III</span>
+            <figure class="spg-trama-img"><img src="img/parque de altamira.jpg" alt="Juego libre en un parque"></figure>
+            <h3><span class="spg-trama-entre">[Barrio / Calle / Zona]</span></h3>
+            <div class="spg-trama-rows">
+              <p><span class="spg-t-row">🏫 Colegio</span><em class="spg-t-val">[En confirmación]</em></p>
+              <p><span class="spg-t-row">📍 Zona urbana</span><em class="spg-t-val">[En confirmación]</em></p>
+              <p><span class="spg-t-row">🌳 Parque / plaza</span><em class="spg-t-val">[En confirmación]</em></p>
+            </div>
+            <a class="spg-btn spg-btn-ghost" href="#spg-map">Ver trama</a>
+          </article>
+        </div>
+      </div>
+    </section>
+<section id="actividades" class="spg-section spg-section-alt">
+      <div class="spg-inner">
+        <div class="spg-head spg-reveal">
+          <span class="spg-num">03 / Qué hacemos</span>
+          <h2 class="spg-h2">¿QUÉ VAMOS<br>A HACER?</h2>
+          <p class="spg-hand spg-head-hand">Jugar también es una forma de explorar.</p>
+        </div>
+        <div class="spg-split">
+          <div class="spg-panel spg-reveal">
+            <h3 class="spg-h3">Juego, construcción y experimentación</h3>
+            <p class="spg-lead">
+              Durante Santander Playground utilizaremos el <strong>juego, la construcción y la experimentación</strong>
+              para descubrir nuevas posibilidades en los espacios que forman parte de nuestra vida cotidiana.
+            </p>
+            <p class="spg-lead">
+              Trabajaremos con <strong>piezas sueltas</strong> y diferentes materiales, principalmente de origen
+              natural y reutilizado, que podrán combinarse, trasladarse y transformarse.
+            </p>
+            <div class="spg-feature-list">
+              <div class="spg-feature">
+                <span class="spg-feature-n">A</span>
+                <p>No buscamos enseñar a los niños <strong>cómo jugar</strong>.</p>
+              </div>
+              <div class="spg-feature">
+                <span class="spg-feature-n">B</span>
+                <p>Queremos ofrecerles un entorno suficientemente abierto para que puedan
+                <strong>imaginar, construir, experimentar y crear sus propias formas de juego</strong>.</p>
+              </div>
+            </div>
+          </div>
+          <figure class="spg-panel spg-panel-img spg-reveal" style="--delay:.1s">
+            <div class="spg-carousel spg-carousel-panel" data-carousel>
+              <div class="spg-carousel-track">
+                <figure class="spg-carousel-item is-active"><img src="img/gal-1.jpg" alt="Construcción con piezas sueltas"></figure>
+                <figure class="spg-carousel-item"><img src="img/gal-2.jpg" alt="Momento de juego de Santander Playground"></figure>
+                <figure class="spg-carousel-item"><img src="img/gal-3.jpg" alt="Exploración del espacio"></figure>
+                <figure class="spg-carousel-item"><img src="img/gal-4.jpg" alt="Construcción con materiales naturales"></figure>
+                <figure class="spg-carousel-item"><img src="img/gal-5.jpg" alt="Experimento y construcción"></figure>
+                <figure class="spg-carousel-item"><img src="img/gal-6.jpg" alt="Infancia jugando en el enclave"></figure>
+                <figure class="spg-carousel-item"><img src="img/gal-7.jpg" alt="Momentos de la experiencia"></figure>
+              </div>
+              <button class="spg-carousel-arrow spg-carousel-prev" aria-label="Foto anterior">‹</button>
+              <button class="spg-carousel-arrow spg-carousel-next" aria-label="Foto siguiente">›</button>
+              <div class="spg-carousel-dots">
+                <button class="spg-carousel-dot is-active" aria-label="Foto 1"></button>
+                <button class="spg-carousel-dot" aria-label="Foto 2"></button>
+                <button class="spg-carousel-dot" aria-label="Foto 3"></button>
+                <button class="spg-carousel-dot" aria-label="Foto 4"></button>
+                <button class="spg-carousel-dot" aria-label="Foto 5"></button>
+                <button class="spg-carousel-dot" aria-label="Foto 6"></button>
+                <button class="spg-carousel-dot" aria-label="Foto 7"></button>
+              </div>
+            </div>
+          </figure>
+        </div>
+        <h3 class="spg-h3 spg-celdas-title spg-reveal">Tres formas de jugar</h3>
+        <div class="spg-grid3 spg-celdas">
+          <article class="spg-cel spg-reveal" style="--chip: var(--spg-fucsia); --delay: 0s">
+            <span class="spg-cel-n">Celda · Canica dinámica</span>
+            <h3>Circuitos y canicas</h3>
+            <p>Construimos recorridos con rampas, tuberías y cuencos. A veces… la canica somos nosotros.</p>
+          </article>
+          <article class="spg-cel spg-reveal" style="--chip: var(--spg-yellow); --delay: .1s">
+            <span class="spg-cel-n">Celda · Ingeniería inversa</span>
+            <h3>Desmontar y descubrir</h3>
+            <p>Desmontamos y reconstruimos objetos cotidianos para entender cómo funcionan: balanzas, pesos, volúmenes y pequeñas máquinas.</p>
+          </article>
+          <article class="spg-cel spg-reveal" style="--chip: var(--spg-cyan); --delay: .2s">
+            <span class="spg-cel-n">Celda · Lógica recíproca</span>
+            <h3>Crear juntos</h3>
+            <p>Construcciones colaborativas que dependen de las demás personas: encajar, esperar y sostener lo que el otro aporta.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="participa" class="spg-section">
+      <div class="spg-inner">
+        <div class="spg-head spg-reveal">
+          <span class="spg-num">04 / Participa</span>
+          <h2 class="spg-h2">¿QUIERES<br>PARTICIPAR?</h2>
+        </div>
+        <div class="spg-split spg-panels">
+          <article class="spg-panel spg-panel-card spg-reveal" style="--chip: var(--spg-fucsia)">
+            <h3 class="spg-h3">🏫 Colegios y AMPAs / AFAs</h3>
+            <p class="spg-lead">
+              El colegio es el punto de partida de cada trama lúdica. Durante una semana desarrollaremos la
+              experiencia con los alumnos y conectaremos el centro con su barrio y su parque más cercano.
+            </p>
+            <p class="spg-note-free">La participación de los colegios en esta edición es gratuita.</p>
+            <a class="spg-btn spg-btn-solid" href="https://forms.gle/bgJvMooXkGXMsoPY9" target="_blank" rel="noopener">Quiero participar como colegio / AMPA</a>
+          </article>
+          <article class="spg-panel spg-panel-card spg-reveal" style="--chip: var(--spg-yellow); --delay:.1s">
+            <h3 class="spg-h3">👨‍👩‍👧‍👦 Familias</h3>
+            <p class="spg-lead">
+              Las familias también forman parte de Santander Playground. El último día de la experiencia en cada
+              colegio y la jornada de juego en el parque estarán abiertas a la participación familiar.
+            </p>
+            <p class="spg-meta-tag">Próximamente se publicarán fechas, lugares y horarios</p>
+            <a class="spg-btn spg-btn-ghost" href="https://forms.gle/aRjZq4jf3rtxuSP59" target="_blank" rel="noopener">Inscripción familias</a>
+          </article>
+        </div>
+      </div>
+    </section>
+    <section id="colabora" class="spg-band">
+      <div class="spg-inner">
+        <span class="spg-num spg-num-band">05 / Colabora</span>
+        <p class="spg-hand spg-hand-band">Tu colegio, tu barrio, tu parque.</p>
+        <h2 class="spg-h2">¿QUIERES<br><span class="spg-accent">FORMAR PARTE?</span></h2>
+        <p class="spg-lead spg-lead-band">
+          Si eres un colegio, una AMPA, una asociación, un profesional o una familia con ganas de jugar,
+          este proyecto también es tuyo.
+        </p>
+        <div class="spg-actions">
+          <a class="spg-btn spg-btn-sun" href="https://forms.gle/bgJvMooXkGXMsoPY9" target="_blank" rel="noopener">Quiero participar</a>
+          <a class="spg-btn spg-btn-line" href="https://wa.me/34625039565?text=Quiero%20colaborar" target="_blank" rel="noopener">Quiero colaborar</a>
+        </div>
+      </div>
+    </section>
+<section class="spg-section spg-section-alt spg-follow">
+      <div class="spg-inner spg-follow-in">
+        <div class="spg-head spg-reveal">
+          <span class="spg-num">Sigue el proyecto</span>
+          <h2 class="spg-h2">SIGUE EL PROYECTO</h2>
+          <p class="spg-hand spg-head-hand">Descubre lo que estamos construyendo.</p>
+        </div>
+        <p class="spg-lead spg-reveal">
+          Síguenos para conocer las actividades, las experiencias de los niños y cómo va creciendo la
+          <strong>Cartografía Lúdica de Santander</strong>.
+        </p>
+        <div class="spg-social spg-reveal">
+          <a class="spg-btn spg-btn-ghost" href="https://www.instagram.com/santanderplayground" target="_blank" rel="noopener">Instagram</a>
+          <a class="spg-btn spg-btn-ghost" href="https://www.facebook.com/santanderplayground/" target="_blank" rel="noopener">Facebook</a>
+          <a class="spg-btn spg-btn-ghost" href="https://wa.me/34625039565" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="equipo" class="spg-section">
+      <div class="spg-inner">
+        <div class="spg-head spg-reveal">
+          <span class="spg-num">06 / Equipo</span>
+          <h2 class="spg-h2">EL EQUIPO QUE<br>LO HACE POSIBLE</h2>
+        </div>
+        <div class="spg-logos">
+          <div class="spg-logo-row spg-reveal">
+            <span class="spg-logo-label">Organiza</span>
+            <div class="spg-logo-slot">
+              <a href="https://tallerescoloniales.com" target="_blank" rel="noopener"><img src="img/logo igual texto.png" alt="Coloniales · Espacios de aprendizaje"></a>
+            </div>
+          </div>
+          <div class="spg-logo-row spg-reveal" style="--delay:.1s">
+            <span class="spg-logo-label">Colaboran</span>
+            <div class="spg-logo-slot spg-logo-multi">
+              <a href="http://jotabetastudio.com/" target="_blank" rel="noopener"><img src="img/logo JOTABETA-1.png" alt="Jotabeta Studio"></a>
+              <a href="https://www.instagram.com/colonialtc" target="_blank" rel="noopener"><img class="spg-logo-sq" src="img/cuadrado fucsia logo.png" alt="Colonial · Taller de construcción"></a>
+              <a href="https://www.santandercreativa.com/" target="_blank" rel="noopener"><img src="img/LOGO_ENCLAVEPRONILLO.png" alt="Enclave Pronillo"></a>
+            </div>
+          </div>
+          <div class="spg-logo-row spg-reveal" style="--delay:.2s">
+            <span class="spg-logo-label">Financiado por</span>
+            <div class="spg-logo-slot spg-logo-multi">
+              <a href="https://www.santandercreativa.com/" target="_blank" rel="noopener"><img src="img/logo santander creativa.png" alt="Santander Creativa"></a>
+              <a href="https://www.santander.es/" target="_blank" rel="noopener"><img src="img/logo ayuntamiento santander.png" alt="Ayuntamiento de Santander"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+<section id="faq" class="spg-section spg-section-alt">
+      <div class="spg-inner">
+        <div class="spg-head spg-reveal">
+          <span class="spg-num">07 / FAQ</span>
+          <h2 class="spg-h2">PREGUNTAS<br>FRECUENTES</h2>
+        </div>
+        <div class="spg-faq spg-reveal">
+          <details class="spg-faq-item" open>
+            <summary><span>¿En qué consiste realmente Santander Playground?</span></summary>
+            <p>
+              Santander Playground es una experiencia de juego, exploración y construcción que conecta tres
+              espacios cotidianos de la infancia: <strong>colegio, barrio y parque</strong>. A través de diferentes
+              propuestas, los niños exploran su entorno, juegan con materiales y construyen nuevas posibilidades
+              de relación con el espacio.
+            </p>
+          </details>
+          <details class="spg-faq-item">
+            <summary><span>¿Para qué edades está indicado?</span></summary>
+            <p>
+              La edad no importa si de jugar se trata, pero en esta ocasión nos centramos en edades de
+              <strong>3 a 12 años</strong>. Las familias podrán acompañarles en las sesiones en familia.
+            </p>
+          </details>
+          <details class="spg-faq-item">
+            <summary><span>¿Tiene algún coste para los colegios?</span></summary>
+            <p><strong>No. La participación de los colegios en esta edición es gratuita.</strong> [Si procede, añadir condiciones].</p>
+          </details>
+          <details class="spg-faq-item">
+            <summary><span>¿Tiene algún coste para las familias?</span></summary>
+            <p>La información sobre el coste para las familias se confirmará al anunciar cada actividad. Escríbenos por WhatsApp y te informaremos.</p>
+          </details>
+          <details class="spg-faq-item">
+            <summary><span>¿Cuál es el objetivo del proyecto?</span></summary>
+            <p>
+              Queremos favorecer una relación más activa y autónoma de la infancia con los espacios que habita.
+              Explorar cómo los niños recorren, utilizan y entienden su entorno nos permite descubrir nuevas
+              posibilidades para el juego y para la propia ciudad.
+            </p>
+          </details>
+          <details class="spg-faq-item">
+            <summary><span>¿Termina el proyecto con estas tres tramas lúdicas?</span></summary>
+            <p>
+              No. Estas tres primeras tramas son el comienzo de una <strong>Cartografía Lúdica de Santander</strong>.
+              La intención es que la red pueda seguir creciendo con nuevos colegios, barrios, parques, familias y
+              espacios de juego.
+            </p>
+            <p><strong>Tres tramas hoy. Una ciudad entera por descubrir.</strong></p>
+          </details>
+          <details class="spg-faq-item">
+            <summary><span>¿Cuál es el origen de Santander Playground?</span></summary>
+            <p>
+              Santander Playground nace de <strong>Coloniales</strong> y de una trayectoria vinculada a la
+              arquitectura, el aprendizaje, el juego y la exploración de los espacios que habitamos. El proyecto
+              parte de una pregunta:
+            </p>
+            <p>
+              <em>¿Qué ocurre si dejamos de pensar los espacios infantiles como lugares aislados y empezamos a
+              entenderlos como parte de una ciudad que también se puede jugar?</em>
+            </p>
+            <p>De esta pregunta nacen las <strong>Cartografías Lúdicas</strong>.</p>
+          </details>
+          <details class="spg-faq-item">
+            <summary><span>¿Dónde y cuándo se realizará?</span></summary>
+            <p>Las fechas de cada trama se anunciarán próximamente. Puedes escribirnos por WhatsApp para recibir la información en cuanto esté disponible.</p>
+          </details>
+          <details class="spg-faq-item">
+            <summary><span>¿Cómo puedo participar?</span></summary>
+            <p>Puedes participar como <strong>colegio, AMPA/AFA o familia</strong>.</p>
+            <a class="spg-btn spg-btn-ghost" href="https://wa.me/34625039565" target="_blank" rel="noopener">Quiero participar</a>
+          </details>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <button class="spg-top" id="spg-top" aria-label="Volver arriba" hidden>↑</button>
+
+  <footer class="spg-footer">
+    <div class="spg-inner">
+      <p class="spg-footer-logo">
+        <span class="spg-footer-name">Santander Playground</span>
+        <span class="spg-footer-sub">CARTOGRAFÍAS LÚDICAS</span>
+      </p>
+      <p class="spg-footer-leit">Colegio · Barrio · Parque · Una ciudad para jugar.</p>
+      <p class="spg-footer-links">
+        <a href="https://www.instagram.com/santanderplayground" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.facebook.com/santanderplayground/" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://wa.me/34625039565" target="_blank" rel="noopener">WhatsApp</a>
+      </p>
+      <p class="spg-footer-legal">
+        <span>Información legal disponible bajo solicitud</span>
+      </p>
+      <p class="spg-footer-copy">Un proyecto de Coloniales · Espacios de aprendizaje · Santander · © 2026</p>
+    </div>
+  </footer>
+
+  <script src="vendor/leaflet.js"></script>
+  <script src="mapa-colegios.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
