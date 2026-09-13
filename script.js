@@ -162,22 +162,80 @@
     var hexIcon = L.divIcon({
       className: 'spg-hex-marker',
       html: '<span class="spg-hex-mark"><span></span></span>',
-      iconSize: [36, 40],
-      iconAnchor: [18, 21],
-      popupAnchor: [0, -21]
+      iconSize: [9, 10],
+      iconAnchor: [5, 5],
+      popupAnchor: [0, -5]
     });
+
+    function safe(text) {
+      return String(text == null ? '' : text)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function linkList(items) {
+      if (!items) return '';
+      var arr = Array.isArray(items) ? items : [{ text: 'Redes', url: items }];
+      return arr.map(function (l) {
+        return '<a href="' + safe(l.url) + '" target="_blank" rel="noopener">' + safe(l.text || 'Enlace') + '</a>';
+      }).join(' · ');
+    }
+
+    function popupSection(label) {
+      return '<small class="spg-popup-ampa">' + safe(label) + '</small>';
+    }
+
+    function schoolBlocks(c) {
+      var html = '';
+      var own = [];
+      if (c.web) own.push({ text: 'Web', url: c.web });
+      (c.social || []).forEach(function (s) { own.push(s); });
+      var ownHtml = linkList(own.length ? own : null);
+      if (c.address) html += '<small>' + safe(c.address) + '</small>';
+      if (ownHtml) html += '<small class="spg-popup-links">' + ownHtml + '</small>';
+      var a = c.ampa;
+      if (a) {
+        html += popupSection(a.name);
+        var ampaLinks = [];
+        if (a.web) ampaLinks.push({ text: 'Web', url: a.web });
+        (a.social || []).forEach(function (s) { ampaLinks.push(s); });
+        var ampaHtml = linkList(ampaLinks.length ? ampaLinks : null);
+        if (ampaHtml) html += '<small class="spg-popup-links">' + ampaHtml + '</small>';
+      }
+      return html;
+    }
 
     var pts = window.SPG_COLES.map(function (c) {
       var m = L.marker([c.lat, c.lon], { icon: hexIcon }).addTo(map);
-      var label = (c.label || '').trim();
-      m.bindPopup(
-        '<b>' + c.name + '</b>' +
-        (label ? '<small>' + label + '</small>' : '')
-      );
+      var html = '<b>' + safe(c.name) + '</b>' + schoolBlocks(c);
+      m.bindPopup(html);
       return [c.lat, c.lon];
     });
 
-    var bounds = L.latLngBounds(pts);
+    var hitoBase = function () {
+      return L.divIcon({
+        className: 'spg-hex-marker',
+        html: '<span class="spg-hex-mark-hito"></span>',
+        iconSize: [9, 10],
+        iconAnchor: [5, 5],
+        popupAnchor: [0, -5]
+      });
+    };
+
+    var allPts = pts.slice();
+    (window.SPG_HITOS || []).forEach(function (h) {
+      var m = L.marker([h.lat, h.lon], { icon: hitoBase() }).addTo(map);
+      var html = '<b>' + safe(h.name) + '</b>';
+      if (h.label) html += '<small>' + safe(h.label) + '</small>';
+      var items = [];
+      if (h.link) items.push({ text: 'tallerescoloniales.com', url: h.link });
+      (h.social || []).forEach(function (s) { items.push(s); });
+      var linksHtml = linkList(items);
+      if (linksHtml) html += '<small class="spg-popup-links">' + linksHtml + '</small>';
+      m.bindPopup(html);
+      allPts.push([h.lat, h.lon]);
+    });
+
+    var bounds = L.latLngBounds(allPts);
     map.fitBounds(bounds.pad(0.22), { animate: false });
 
     function fitVisible() {

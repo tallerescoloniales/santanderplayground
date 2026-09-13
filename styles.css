@@ -133,6 +133,9 @@ button, input, select, textarea { font-family: inherit; }
 .spg-lead-big {
   font-size: clamp(1.15rem, 2.4vw, 1.4rem);
   max-width: 52ch;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 /* ============ BOTONES ============ */
@@ -621,7 +624,7 @@ button, input, select, textarea { font-family: inherit; }
   gap: 1.6rem;
   width: max-content;
   padding: .85rem 0;
-  animation: spg-scroll 26s linear infinite;
+  animation: spg-scroll 18s linear infinite;
 }
 
 .spg-marquee-track span {
@@ -846,18 +849,43 @@ button, input, select, textarea { font-family: inherit; }
 .spg-hex-mark {
   position: relative;
   display: block;
-  width: 36px;
-  height: 40px;
+  width: 9px;
+  height: 10px;
   background: var(--spg-fucsia);
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-  box-shadow: 3px 3px 0 var(--spg-ink);
+  box-shadow: 1px 1px 0 var(--spg-ink);
 }
 
 .spg-hex-mark span {
   position: absolute;
-  inset: 4px;
+  inset: 1px;
   background: var(--spg-paper);
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+
+.spg-hex-mark-hito {
+  position: relative;
+  display: block;
+  width: 9px;
+  height: 10px;
+  background: var(--spg-fucsia);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  box-shadow: 1px 1px 0 var(--spg-ink);
+}
+
+.leaflet-popup-content .spg-popup-links a {
+  color: var(--spg-fucsia);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.leaflet-popup-content .spg-popup-ampa {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(27, 33, 64, 0.35);
+  font-weight: 700;
+  color: var(--spg-ink);
+  text-transform: uppercase;
 }
 
 .leaflet-popup-content-wrapper {
@@ -1410,8 +1438,6 @@ button, input, select, textarea { font-family: inherit; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .spg-reveal { opacity: 1; transform: none; transition: none; }
-  .spg-marquee-track { animation: none; }
-  .spg-carousel-item { transition: none; }
   .spg-scroll-hint i::after { animation: none; }
 }
 
@@ -1475,39 +1501,35 @@ body {
   min-height: 720px;
   height: auto;
   max-height: none;
-  align-items: flex-start;
-  background: #fff;
+  align-items: center;
+  background: var(--spg-ink-2);
   color: var(--spg-ink);
 }
-.spg-hero-shade { display: none; }
-.spg-carousel-hero {
-  top: 8rem;
-  right: 5%;
-  left: auto;
-  width: 43%;
-  height: 490px;
-  border-radius: 4px;
-  border: 1px solid var(--spg-line);
+.spg-hero-shade {
+  background: linear-gradient(180deg, rgba(32, 32, 40, 0.6) 0%, rgba(32, 32, 40, 0.3) 45%, rgba(32, 32, 40, 0.8) 100%);
 }
+.spg-carousel-hero { inset: 0; width: auto; height: auto; border: 0; border-radius: 0; }
 .spg-carousel-hero .spg-carousel-item img { object-position: center; }
-.spg-hero-in { padding: 10.5rem 0 6rem; }
-.spg-hero-copy { max-width: 54%; color: var(--spg-ink); }
-.spg-kicker { margin-bottom: 1.2rem; }
+.spg-hero-in { padding: 9rem 0 6.5rem; }
+.spg-hero-copy { max-width: 800px; margin: 0 auto; text-align: center; color: #fff; }
+.spg-kicker { justify-content: center; margin-bottom: 1.2rem; }
 .spg-sticker { border-width: 1px; box-shadow: none; border-radius: 4px; font-size: .62rem; letter-spacing: .1em; }
 .spg-hero-copy h1 {
-  color: var(--spg-ink);
-  text-shadow: none;
+  color: #fff;
+  text-shadow: 6px 6px 0 rgba(32, 32, 40, 0.7);
   font-family: 'Montserrat', sans-serif;
   font-size: clamp(3rem, 6.5vw, 6rem);
   font-weight: 900;
   letter-spacing: -.05em;
   line-height: .94;
 }
-.spg-stencil-accent { color: var(--spg-fucsia); }
-.spg-hero-sub { color: var(--spg-fucsia); font-size: .9rem; font-weight: 800; letter-spacing: .15em; }
-.spg-hero-hand { color: var(--spg-fucsia); }
-.spg-chips span { color: var(--spg-ink); border: 1px solid var(--spg-line); background: transparent; font-size: .68rem; }
-.spg-scroll-hint { color: var(--spg-ink); }
+.spg-stencil-accent { color: var(--spg-yellow); }
+.spg-hero-sub { color: #fff; font-size: .9rem; font-weight: 800; letter-spacing: .15em; }
+.spg-hero-hand { color: var(--spg-yellow); }
+.spg-chips { justify-content: center; }
+.spg-chips span { color: #fff; border: 1px solid rgba(255, 255, 255, 0.7); background: rgba(32, 32, 40, 0.4); font-size: .68rem; }
+.spg-hero .spg-actions { justify-content: center; }
+.spg-scroll-hint { color: #fff; }
 .spg-marquee { background: var(--spg-fucsia); border-width: 1px; }
 .spg-marquee-track { padding: .65rem 0; }
 .spg-marquee-track span { font-size: .85rem; letter-spacing: .12em; }
@@ -1530,35 +1552,6 @@ body {
 .spg-faq-item summary { font-family: 'Montserrat', sans-serif; font-size: .9rem; letter-spacing: .02em; }
 .spg-footer { background: var(--spg-ink); }
 
-.spg-carousel-hero figcaption {
-  position: absolute;
-  z-index: 3;
-  left: 1.2rem;
-  right: 1.2rem;
-  bottom: 1.2rem;
-  display: flex;
-  flex-direction: column;
-  gap: .25rem;
-  color: #fff;
-  text-shadow: 0 1px 8px rgba(0,0,0,.45);
-}
-
-.spg-carousel-hero figcaption strong {
-  font-size: clamp(1.3rem, 2.6vw, 2.2rem);
-  line-height: 1.05;
-  letter-spacing: -.04em;
-}
-
-.spg-carousel-hero figcaption span { font-size: .8rem; line-height: 1.35; }
-.spg-carousel-hero::after {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  inset: 42% 0 0;
-  background: linear-gradient(transparent, rgba(0,0,0,.65));
-  pointer-events: none;
-}
-
 .spg-trama-img {
   height: 150px;
   margin: -2rem -1.6rem 1.5rem;
@@ -1568,25 +1561,11 @@ body {
 .spg-trama-img img { width: 100%; height: 100%; object-fit: cover; }
 .spg-logo-slot a { display: inline-flex; align-items: center; }
 
-@media (max-width: 980px) {
-  .spg-carousel-hero { right: 4%; width: 46%; }
-  .spg-hero-copy { max-width: 50%; }
-}
-
 @media (max-width: 620px) {
-  .spg-hero { min-height: 800px; }
-  .spg-carousel-hero {
-    top: 5.2rem;
-    right: 4%;
-    left: 4%;
-    width: 92%;
-    height: 245px;
-  }
-  .spg-carousel-hero figcaption { left: .8rem; right: .8rem; bottom: .8rem; }
-  .spg-carousel-hero figcaption strong { font-size: 1.2rem; }
-  .spg-carousel-hero figcaption span { font-size: .68rem; }
+  .spg-hero { min-height: 560px; }
+  .spg-carousel-hero { inset: 0; top: auto; right: auto; left: auto; width: auto; height: auto; }
   .spg-trama-img { margin-left: -1.2rem; margin-right: -1.2rem; }
-  .spg-hero-in { padding: 19rem 0 4rem; }
+  .spg-hero-in { padding: 8.5rem 0 5rem; }
   .spg-hero-copy { max-width: 100%; }
   .spg-hero-copy h1 { font-size: clamp(2.45rem, 13vw, 4.4rem); white-space: normal; }
   .spg-hero-sub { font-size: .7rem; letter-spacing: .1em; }
