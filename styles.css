@@ -1,17 +1,17 @@
 :root {
-  --spg-ink: #1b2140;
-  --spg-ink-2: #12152b;
-  --spg-paper: #f7f1e6;
-  --spg-paper-2: #efe5d1;
-  --spg-fucsia: #e3276f;
-  --spg-fucsia-dark: #b3155a;
-  --spg-yellow: #ffd23f;
-  --spg-cyan: #19b6e5;
+  --spg-ink: #202028;
+  --spg-ink-2: #202028;
+  --spg-paper: #ffffff;
+  --spg-paper-2: #f7f7f5;
+  --spg-fucsia: #d71962;
+  --spg-fucsia-dark: #ac124c;
+  --spg-yellow: #f5d547;
+  --spg-cyan: #1eafd0;
   --spg-white: #ffffff;
-  --spg-line: rgba(27, 33, 64, 0.14);
-  --spg-font-stencil: 'Saira Stencil One', sans-serif;
-  --spg-font-display: 'Saira Extra Condensed', sans-serif;
-  --spg-font-body: 'Saira', sans-serif;
+  --spg-line: rgba(32, 32, 40, 0.14);
+  --spg-font-stencil: 'Montserrat', sans-serif;
+  --spg-font-display: 'Montserrat', sans-serif;
+  --spg-font-body: 'Montserrat', sans-serif;
   --spg-font-hand: 'Playwrite NO', cursive;
   --spg-shadow: 8px 8px 0 var(--spg-ink);
   --spg-shadow-sm: 4px 4px 0 var(--spg-ink);
@@ -1442,20 +1442,6 @@ button, input, select, textarea { font-family: inherit; }
 }
 
 /* ============ VARIANTE COLONIALES: EDITORIAL Y LIMPIA ============ */
-:root {
-  --spg-ink: #202028;
-  --spg-ink-2: #202028;
-  --spg-paper: #ffffff;
-  --spg-paper-2: #f7f7f5;
-  --spg-fucsia: #d71962;
-  --spg-fucsia-dark: #ac124c;
-  --spg-yellow: #f5d547;
-  --spg-cyan: #1eafd0;
-  --spg-line: rgba(32, 32, 40, .14);
-  --spg-font-stencil: 'Montserrat', sans-serif;
-  --spg-font-display: 'Montserrat', sans-serif;
-  --spg-font-body: 'Montserrat', sans-serif;
-}
 
 body {
   background-image: none;
