@@ -3,10 +3,10 @@
   --spg-ink-2: #202028;
   --spg-paper: #ffffff;
   --spg-paper-2: #f7f7f5;
-  --spg-fucsia: #d71962;
-  --spg-fucsia-dark: #ac124c;
-  --spg-yellow: #f5d547;
-  --spg-cyan: #1eafd0;
+  --spg-fucsia: #ee263e;
+  --spg-fucsia-dark: #661d34;
+  --spg-yellow: #ffb92a;
+  --spg-cyan: #00a9eb;
   --spg-white: #ffffff;
   --spg-line: rgba(32, 32, 40, 0.14);
   --spg-font-stencil: 'Montserrat', sans-serif;
@@ -249,11 +249,25 @@ button, input, select, textarea { font-family: inherit; }
 }
 
 .spg-logo {
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
-  text-transform: uppercase;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.spg-logo-img {
+  height: 36px;
+  width: auto;
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+  transition: transform .2s ease, opacity .2s ease;
+}
+
+.spg-logo:hover .spg-logo-img {
+  transform: translateY(-1px);
+  opacity: .92;
 }
 
 .spg-logo-top {
@@ -770,6 +784,59 @@ button, input, select, textarea { font-family: inherit; }
 .spg-trama-entre {
   font-size: 1.15rem;
   color: var(--spg-fucsia);
+}
+
+
+/* 2x2 Grid for Tramas */
+.spg-grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.8rem;
+  margin-top: 2.4rem;
+}
+
+@media (max-width: 820px) {
+  .spg-grid2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.spg-card[style*="--spg-yellow"] .spg-chip {
+  color: var(--spg-ink);
+}
+
+.spg-t-row {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .4rem;
+  font-family: var(--spg-font-display);
+  font-size: .92rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  color: var(--spg-ink);
+}
+
+.spg-t-date {
+  display: inline-block;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--spg-ink);
+  background: var(--spg-paper-2);
+  border: 1px solid var(--spg-line);
+  border-radius: 4px;
+  padding: .12rem .45rem;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.spg-t-val {
+  font-size: .95rem;
+  color: var(--chip, var(--spg-fucsia));
+  font-style: normal;
+  font-weight: 700;
+  text-align: right;
 }
 
 .spg-trama-rows { display: flex; flex-direction: column; gap: .55rem; margin: .4rem 0 1.1rem; }
@@ -1548,6 +1615,7 @@ body {
 .spg-logo-slot a { display: inline-flex; align-items: center; }
 
 @media (max-width: 620px) {
+  .spg-logo-img { height: 30px; }
   .spg-hero { min-height: 560px; }
   .spg-carousel-hero { inset: 0; border: 0; border-radius: 0; }
   .spg-trama-img { margin-left: -1.2rem; margin-right: -1.2rem; }
