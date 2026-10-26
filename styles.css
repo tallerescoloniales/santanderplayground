@@ -59,7 +59,20 @@ button, input, select, textarea { font-family: inherit; }
 
 .spg-section { padding: clamp(4rem, 9vw, 7rem) 0; }
 
-.spg-section-alt { background: var(--spg-paper-2); }
+.spg-section-alt {
+  background-color: var(--spg-paper-2);
+  --spg-section-pattern: url("img/fondos/fondo 1.png");
+  background-image:
+    linear-gradient(rgba(247, 247, 245, .3), rgba(247, 247, 245, .3)),
+    var(--spg-section-pattern);
+  background-size: auto, cover;
+  background-position: center, center center;
+  background-repeat: no-repeat, no-repeat;
+}
+
+#actividades { --spg-section-pattern: url("img/fondos/fondo 3.png"); }
+#redes { --spg-section-pattern: url("img/fondos/fondo 2.png"); }
+#faq { --spg-section-pattern: url("img/fondos/fondo 1.png"); }
 
 /* ============ REVEAL ============ */
 .spg-reveal {
@@ -539,6 +552,19 @@ button, input, select, textarea { font-family: inherit; }
   text-shadow: 5px 5px 0 rgba(18, 21, 43, 0.85);
   letter-spacing: .02em;
   margin: 0 0 1rem;
+}
+
+.spg-hero-copy .spg-hero-title {
+  margin: 0 auto 1rem;
+  max-width: min(100%, 342px);
+}
+
+.spg-hero-logo {
+  display: block;
+  width: min(100%, 342px);
+  height: auto;
+  margin: 0 auto;
+  filter: drop-shadow(5px 5px 0 rgba(18, 21, 43, 0.85));
 }
 
 .spg-stencil-accent { color: var(--spg-yellow); }
@@ -1589,7 +1615,7 @@ body {
 .spg-marquee-track i { width: 8px; height: 8px; border-width: 1px; }
 
 .spg-section { padding: clamp(4.5rem, 9vw, 7rem) 0; }
-.spg-section-alt { background: var(--spg-paper-2); }
+.spg-section-alt { background-color: var(--spg-paper-2); }
 .spg-h2 { font-family: 'Montserrat', sans-serif; font-size: clamp(2rem, 5vw, 4.3rem); letter-spacing: -.05em; line-height: 1; }
 .spg-h3 { font-family: 'Montserrat', sans-serif; letter-spacing: -.03em; }
 .spg-num { border-width: 1px; border-radius: 4px; font-family: 'Montserrat', sans-serif; font-size: .65rem; box-shadow: none; }
@@ -1603,7 +1629,13 @@ body {
 .spg-logo-label { border-width: 1px; border-radius: 4px; box-shadow: none; font-size: .75rem; }
 .spg-logo-slot { border-width: 1px; border-radius: 4px; box-shadow: none; }
 .spg-faq-item summary { font-family: 'Montserrat', sans-serif; font-size: .9rem; letter-spacing: .02em; }
-.spg-footer { background: var(--spg-ink); }
+.spg-footer {
+  background-color: var(--spg-ink);
+  background-image: url("img/fondos/fondo 4.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 
 .spg-trama-img {
   height: 150px;
