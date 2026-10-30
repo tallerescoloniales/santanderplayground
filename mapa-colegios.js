@@ -1260,3 +1260,29 @@ window.SPG_HITOS = [
         ]
     }
 ];
+
+window.SPG_ENCLAVES = [
+    { name: "CEIP Magallanes", category: "candidato", lat: 43.4618121, lon: -3.8173105 },
+    { name: "CEIP Nueva Montaña", category: "candidato", lat: 43.4394713, lon: -3.8453654 },
+    { name: "CEIP Marqués de Estella", category: "candidato", lat: 43.447015, lon: -3.8612468 },
+    { name: "Colegio Atalaya", category: "candidato", lat: 43.4692447, lon: -3.8048457 },
+    { name: "CEIP Fuente de la Salud", category: "candidato", lat: 43.4556529, lon: -3.8354744 },
+    { name: "Colegio Verdemar", category: "candidato", lat: 43.46424, lon: -3.866028 },
+    { name: "Centro de Educación Infantil Gerardo Diego", category: "candidato", lat: 43.4559358, lon: -3.8469443 },
+    { name: "CEIP Dionisio García Barredo", category: "candidato", lat: 43.469918, lon: -3.809037 },
+    { name: "CEIP Cabo Mayor", category: "candidato", lat: 43.4794131, lon: -3.8018102 },
+    { name: "CEIP Manuel Cacicedo", category: "candidato", lat: 43.4666401, lon: -3.8537162 },
+    { name: "CEIP Eloy Villanueva", category: "candidato", lat: 43.4716971, lon: -3.830872 },
+    { name: "CEIP Quinta Porrúa", category: "elegido", lat: 43.4621455, lon: -3.8270134 },
+    { name: "CEIP Manuel Llano", category: "elegido", lat: 43.4635027, lon: -3.8287091 },
+    { name: "CEIP José Arce Bodega", category: "elegido", lat: 43.4552966, lon: -3.8134105 },
+    { name: "CEIP Menéndez Pelayo", category: "elegido", lat: 43.4637041, lon: -3.8001986 },
+    { name: "Parque de Mendicouague", category: "parque", lat: 43.4628951, lon: -3.8268042 },
+    { name: "Plaza del Cuadro", category: "parque", lat: 43.4627888, lon: -3.8002729 },
+    { name: "Parque infantil (Plaza de las Cachavas)", category: "parque", lat: 43.4591433, lon: -3.8080186 },
+    { name: "Biblioteca Central de Cantabria", category: "barrio", lat: 43.4541984, lon: -3.8141847 },
+    { name: "Acera Tabacalera", category: "barrio", lat: 43.4554945, lon: -3.811597 },
+    { name: "Pista Porrúa", category: "barrio", lat: 43.4614385, lon: -3.8274458 },
+    { name: "Porrúa", category: "barrio", lat: 43.4643022, lon: -3.8257436 },
+    { name: "Calle Santa Lucía, 18", category: "barrio", lat: 43.4639721, lon: -3.8005528 }
+];

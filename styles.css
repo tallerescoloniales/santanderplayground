@@ -928,6 +928,28 @@ button, input, select, textarea { font-family: inherit; }
   flex-wrap: wrap;
 }
 
+.spg-map-note > span {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+.spg-map-note .spg-map-source-links { gap: .3rem; }
+
+.spg-map-legend-icon {
+  width: 24px;
+  height: 21px;
+  flex: none;
+}
+
+.spg-map-legend-icon { object-fit: contain; }
+
+.spg-map .leaflet-control-layers {
+  border: 2px solid var(--spg-ink);
+  border-radius: 3px;
+  font-family: var(--spg-font-body);
+}
+
 .spg-legend-hex {
   display: inline-block;
   width: 14px;

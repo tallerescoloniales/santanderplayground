@@ -127,7 +127,11 @@
     var el = document.getElementById('spg-map');
     if (!el || typeof L === 'undefined' || !window.SPG_COLES || !window.SPG_COLES.length) return;
 
-    var map = L.map(el, { scrollWheelZoom: false });
+    var map = L.map(el, {
+      center: [43.4618279, -3.8152569],
+      zoom: 14,
+      scrollWheelZoom: false
+    });
 
     var providers = [
       {
@@ -204,12 +208,52 @@
       return html;
     }
 
-    var pts = window.SPG_COLES.map(function (c) {
-      var m = L.marker([c.lat, c.lon], { icon: hexIcon }).addTo(map);
+    var schoolLayer = L.layerGroup();
+    var hitoLayer = L.layerGroup().addTo(map);
+    window.SPG_COLES.forEach(function (c) {
+      var m = L.marker([c.lat, c.lon], { icon: hexIcon }).addTo(schoolLayer);
       var html = '<b>' + safe(c.name) + '</b>' + schoolBlocks(c);
       m.bindPopup(html);
-      return [c.lat, c.lon];
     });
+
+    var categoryLabels = {
+      candidato: 'Colegio candidato',
+      elegido: 'Colegio elegido',
+      parque: 'Parque / plaza',
+      barrio: 'Barrio / calle'
+    };
+    var enclaveLayers = {
+      candidato: L.layerGroup().addTo(map),
+      elegido: L.layerGroup().addTo(map),
+      parque: L.layerGroup().addTo(map),
+      barrio: L.layerGroup().addTo(map)
+    };
+    var enclaveIcons = {
+      candidato: L.icon({
+        iconUrl: 'img/pin%20mapas/tiangulo%20amarillo.png',
+        iconSize: [24, 21],
+        iconAnchor: [12, 21],
+        popupAnchor: [0, -18]
+      }),
+      elegido: L.icon({
+        iconUrl: 'img/pin%20mapas/rojo.png',
+        iconSize: [24, 21],
+        iconAnchor: [12, 21],
+        popupAnchor: [0, -18]
+      }),
+      parque: L.icon({
+        iconUrl: 'img/pin%20mapas/verde%20osc.png',
+        iconSize: [24, 21],
+        iconAnchor: [12, 21],
+        popupAnchor: [0, -18]
+      }),
+      barrio: L.icon({
+        iconUrl: 'img/pin%20mapas/azul%20claro.png',
+        iconSize: [24, 21],
+        iconAnchor: [12, 21],
+        popupAnchor: [0, -18]
+      })
+    };
 
     var hitoBase = function () {
       return L.divIcon({
@@ -221,9 +265,8 @@
       });
     };
 
-    var allPts = pts.slice();
     (window.SPG_HITOS || []).forEach(function (h) {
-      var m = L.marker([h.lat, h.lon], { icon: hitoBase() }).addTo(map);
+      var m = L.marker([h.lat, h.lon], { icon: hitoBase() }).addTo(hitoLayer);
       var html = '<b>' + safe(h.name) + '</b>';
       if (h.label) html += '<small>' + safe(h.label) + '</small>';
       var items = [];
@@ -232,15 +275,30 @@
       var linksHtml = linkList(items);
       if (linksHtml) html += '<small class="spg-popup-links">' + linksHtml + '</small>';
       m.bindPopup(html);
-      allPts.push([h.lat, h.lon]);
     });
 
-    var bounds = L.latLngBounds(allPts);
-    map.fitBounds(bounds.pad(0.22), { animate: false });
+    (window.SPG_ENCLAVES || []).forEach(function (h) {
+      var layer = enclaveLayers[h.category];
+      if (!layer) throw new Error('Categoría de enclave desconocida: ' + h.category);
+      var m = L.marker([h.lat, h.lon], {
+        icon: enclaveIcons[h.category],
+        title: h.name
+      }).addTo(layer);
+      m.bindPopup('<small class="spg-popup-ampa">' + categoryLabels[h.category] + '</small><b>' + safe(h.name) + '</b>');
+    });
+
+    var overlays = {
+      'Colegios candidatos': enclaveLayers.candidato,
+      'Colegios elegidos': enclaveLayers.elegido,
+      'Parques / plazas': enclaveLayers.parque,
+      'Barrios / calles': enclaveLayers.barrio,
+      'Directorio de colegios': schoolLayer,
+      'Otros lugares destacados': hitoLayer
+    };
+    L.control.layers(null, overlays, { collapsed: false }).addTo(map);
 
     function fitVisible() {
-      map.invalidateSize();
-      map.fitBounds(bounds.pad(0.22), { animate: false });
+      map.invalidateSize({ pan: false });
     }
 
     if (document.readyState === 'complete') { fitVisible(); }
