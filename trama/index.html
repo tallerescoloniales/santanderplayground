@@ -17,7 +17,19 @@ body{background:var(--bg);color:var(--fg);font:13px/1.35 system-ui,-apple-system
 #cv.is-panning{cursor:grabbing}
 #cv:focus-visible{outline:3px solid var(--acc);outline-offset:4px}
 .panel{background:var(--panel);border-left:1px solid var(--line);overflow:auto;padding:4px 14px 24px}
-@media(max-width:820px){.app{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(220px,40dvh) minmax(0,1fr);height:100dvh}.panel{border-left:0;border-top:1px solid var(--line)}}
+@media(max-width:820px){
+  html,body{height:100%;overflow:hidden}
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(150px,30dvh) minmax(0,1fr);height:100dvh}
+  .stage{padding:8px}
+  .panel{border-left:0;border-top:1px solid var(--line);padding:4px 14px calc(20px + env(safe-area-inset-bottom,0px))}
+  body{font-size:14px}
+  details.section>summary{font-size:12px;padding:15px 2px;min-height:20px}
+  .panel .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .panel .row>*{flex:initial;min-width:0}
+  button,select,input[type=text],input[type=number]{min-height:44px}
+  .f input[type=range]{min-height:34px;touch-action:pan-y}
+  .sw input{height:40px}
+}
 details.section{border-bottom:1px solid var(--line);padding:0 0 8px}
 details.section>summary{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:0;padding:14px 0 6px;font-weight:600;cursor:pointer;list-style:none}
 details.section>summary::-webkit-details-marker{display:none}
@@ -28,7 +40,7 @@ details.section[open]>summary::after{content:"−"}
 .f .v{color:var(--mut);font-variant-numeric:tabular-nums}
 .f input[type=range]{grid-column:1/3;width:100%;accent-color:var(--acc);margin:0}
 select,input[type=text],input[type=number],input[type=file]{width:100%;box-sizing:border-box;background:var(--ctl);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;font:inherit}
-button{background:var(--ctl);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:7px 10px;font:inherit;cursor:pointer}
+button{background:var(--ctl);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:7px 10px;font:inherit;cursor:pointer;touch-action:manipulation}
 button:hover{border-color:var(--acc)}
 button.p{background:var(--acc);border-color:var(--acc);color:#fff}
 .row{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.row>*{flex:1;min-width:0}
@@ -55,7 +67,10 @@ const PATTERNS={diagonal:'Diagonal',horizontal:'Franja horizontal',vertical:'Fra
   corners:'Esquinas opuestas (sup. izq. + inf. der.)',otherCorners:'Esquinas opuestas (sup. der. + inf. izq.)',threeCorners:'Tres esquinas',fourCorners:'Las cuatro esquinas',surround:'Los cuatro lados',full:'Malla completa'};
 const CASCADES={ne:'Diagonal: arriba derecha',nw:'Diagonal: arriba izquierda',se:'Diagonal: abajo derecha',sw:'Diagonal: abajo izquierda',
   leftToRight:'Horizontal: izquierda a derecha',rightToLeft:'Horizontal: derecha a izquierda',topToBottom:'Vertical: arriba a abajo',bottomToTop:'Vertical: abajo a arriba',none:'Sin cascada'};
-const S={anim:'eje',fmt:'banner',W:3298,H:1502,cols:8,shx:0,shy:0,gap:0,casc:90,cdir:'ne',wB:30,wT:10,wS:20,wH:20,wP:20,batch:5,intv:1.6,dur:1.2,seed:7,
+const CASCADE_POSITIONS={top:'Arriba',bottom:'Abajo',left:'Izquierda',right:'Derecha',
+  topLeft:'Arriba + izquierda',topRight:'Arriba + derecha',bottomLeft:'Abajo + izquierda',bottomRight:'Abajo + derecha',
+  topBottom:'Arriba + abajo',leftRight:'Izquierda + derecha',all:'Todos los lados',center:'Centro'};
+const S={anim:'eje',fmt:'banner',W:3298,H:1502,cols:14,shx:0,shy:0,shz:0,gap:0,casc:90,cdir:'ne',cangle:0,cpos:'bottomLeft',wB:30,wT:10,wS:20,wH:20,wP:20,batch:5,intv:1.6,dur:1.2,seed:7,
   layout:'diagonal',bg:'#ffffff',bgImage:null,bgImageData:null,bgZoom:1,bgRotation:0,bgX:0,bgY:0,transp:true,filename:'trama',
   pal:['#e62a2d','#ffb92a','#3a9144','#a4d866','#0057bf','#00a9eb']};
 const $=id=>document.getElementById(id),cv=$('cv'),g=cv.getContext('2d'),uiControls={};
@@ -65,6 +80,9 @@ let imageGesture=null,backgroundDragged=false;
 // ---------- aleatorio determinista por celda (la trama no «salta» al mover un control)
 function R(a,b,c){let h=(Math.imul(a,374761393)+Math.imul(b,668265263)+Math.imul(c,2147483647)+Math.imul(S.seed,1274126177))|0;h=Math.imul(h^(h>>>13),1274126177);h^=h>>>16;return(h>>>0)/4294967296}
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+function meshOffset(){
+  return[(S.shx-S.shy)/100*2*SX,(S.shx+S.shy-2*S.shz)/100*3*SY];
+}
 function pickC(r,avoid=[]){const allowed=WTC.map((weight,i)=>avoid.includes(i)?0:weight),total=allowed.reduce((a,b)=>a+b,0);
   if(!total){const counts=WTC.map((_,i)=>avoid.filter(c=>c===i).length),min=Math.min(...counts),choices=counts.flatMap((n,i)=>n===min?[i]:[]);return choices[Math.floor(r*choices.length)]}
   r*=total;for(let i=0;i<allowed.length;i++)if((r-=allowed[i])<0)return i;return 0}
@@ -78,18 +96,24 @@ function edgeKeys(face){
 }
 // ---------- construcción de la malla
 function build(){
-  const VW=S.cols*2*SX,VH=VW*S.H/S.W,shX=S.shx/100*2*SX,shY=S.shy/100*3*SY;
+  const VW=S.cols*2*SX,VH=VW*S.H/S.W,[shX,shY]=meshOffset();
   const tot=S.wB+S.wT+S.wS+S.wH+S.wP,pp=tot?S.wP/tot:0,q=Math.min(1,1.5*pp);
-  const faces=[],units=[],edgeOwners=new Map(),rmax=Math.ceil(VH/(3*SY))+2;
+  const faces=[],units=[],edgeOwners=new Map(),rmax=Math.ceil(VH/(3*SY))+2,cells=[];
+  const anchors={top:[[.5,0]],bottom:[[.5,1]],left:[[0,.5]],right:[[1,.5]],topLeft:[[0,0]],topRight:[[1,0]],
+    bottomLeft:[[0,1]],bottomRight:[[1,1]],topBottom:[[.5,0],[.5,1]],leftRight:[[0,.5],[1,.5]],
+    all:[[.5,0],[.5,1],[0,.5],[1,.5]],center:[[.5,.5]]};
+  const directions={ne:[1,-1],nw:[-1,-1],se:[1,1],sw:[-1,1],leftToRight:[1,0],
+    rightToLeft:[-1,0],topToBottom:[0,1],bottomToTop:[0,-1],none:[0,0]};
+  const [dx0,dy0]=directions[S.cdir]||directions.ne,angle=S.cangle*Math.PI/180;
+  const dx=dx0*Math.cos(angle)-dy0*Math.sin(angle),dy=dx0*Math.sin(angle)+dy0*Math.cos(angle);
+  const origins=anchors[S.cpos]||anchors.topLeft;
   for(let r=-2;r<=rmax;r++)for(let m=-3;m<=S.cols+3;m++){
     const k=2*m+(r&1),l=3*r,cx=k*SX+shX,cy=l*SY+shY;
     if(cx<-2.2*SX||cx>VW+2.2*SX||cy<-2.4*SY||cy>VH+2.4*SY)continue;
-    if(S.layout!=='full'&&S.cdir!=='none'){
-      let u=clamp(cx/VW,0,1),v=clamp(cy/VH,0,1);
-      if(['nw','sw'].includes(S.cdir))u=1-u;if(['se','sw'].includes(S.cdir))v=1-v;
-      const cascade=S.casc/100,tail=clamp((cascade-.9)/.1,0,1),cutoff=cascade<=.9?-1.2+cascade/.9*1.2:.95*tail*tail*(3-2*tail);
-      const corner=(x,y)=>.32-Math.hypot(u-x,v-y);
-      let score={diagonal:u*.9-v*1.1+.35,horizontal:.14-Math.abs(v-.5),vertical:.14-Math.abs(u-.5),
+    let u=clamp(cx/VW,0,1),v=clamp(cy/VH,0,1);
+    if(['nw','sw'].includes(S.cdir))u=1-u;if(['se','sw'].includes(S.cdir))v=1-v;
+    const corner=(x,y)=>.32-Math.hypot(u-x,v-y);
+    const shapeScore=S.layout==='full'?0:{diagonal:u*.9-v*1.1+.35,horizontal:.14-Math.abs(v-.5),vertical:.14-Math.abs(u-.5),
         top:.52-v,bottom:v-.48,left:.52-u,right:u-.48,
         sides:Math.abs(u-.5)-.12,topBottom:Math.abs(v-.5)-.12,
         topLeft:corner(0,0),topRight:corner(1,0),bottomLeft:corner(0,1),bottomRight:corner(1,1),
@@ -98,16 +122,16 @@ function build(){
         corners:Math.max(corner(0,0),corner(1,1)),otherCorners:Math.max(corner(1,0),corner(0,1)),
         threeCorners:Math.max(corner(0,0),corner(1,0),corner(0,1)),
         fourCorners:Math.max(.28-Math.hypot(u,v),.28-Math.hypot(1-u,v),.28-Math.hypot(u,1-v),.28-Math.hypot(1-u,1-v)),
-        surround:.3-Math.min(u,1-u,v,1-v)}[S.layout]??(S.cdir==='none'?1:u*.9-v*1.1+.35);
-      if(S.layout==='diagonal'){
-        if(S.cdir==='leftToRight')score=u-.5;
-        if(S.cdir==='rightToLeft')score=.5-u;
-        if(S.cdir==='topToBottom')score=v-.5;
-        if(S.cdir==='bottomToTop')score=.5-v;
-      }
-      const d=score-cutoff+(R(k,l,0)-.5)*.3*cascade;
-      if(d<0)continue;
-    }
+        surround:.3-Math.min(u,1-u,v,1-v)}[S.layout]??0;
+    const progress=S.cdir==='none'?0:Math.max(...origins.map(([ax,ay])=>{
+      const du=u-ax,dv=v-ay;return-Math.hypot(du,dv)+(dx*du+dy*dv)*.75;
+    }));
+    cells.push({k,l,x:(k+l)/2,y:(l-k)/2,score:shapeScore+progress,tie:R(k,l,0)});
+  }
+  const occupied=Math.round(cells.length*clamp(S.casc,0,100)/100);
+  const selected=new Set(cells.sort((a,b)=>b.score-a.score||a.tie-b.tie).slice(0,occupied).map(cell=>`${cell.k},${cell.l}`));
+  for(const{ k,l,x,y }of cells.sort((a,b)=>a.l-b.l||a.k-b.k)){
+    if(!selected.has(`${k},${l}`))continue;
     const used=new Set(),cube={x:(k+l)/2,y:(l-k)/2};
     const mk=(i,st,stripeAllowed)=>{const f={x:cube.x,y:cube.y,i,st,stripeAllowed,flip:null,adjacentFaces:[]};faces.push(f);return f};
     const gs=(s)=>j=>R(k,l,20+s*4+j);
@@ -220,7 +244,7 @@ function drawFace(sk,P,L,a,i){
   else bands(L.gr).forEach(([u0,u1])=>poly(L.ax===0?[[u0,0],[u1,0],[u1,1],[u0,1]]:[[0,u0],[1,u0],[1,u1],[0,u1]]));
 }
 function render(sk,W,H,t,s){
-  const kk=W/(S.cols*2*SX),shX=S.shx/100*2*SX,shY=S.shy/100*3*SY;
+  const kk=W/(S.cols*2*SX),[shX,shY]=meshOffset();
   const sp=p=>[((p[0]-p[1])*SX+shX)*kk,((p[0]+p[1]-2*p[2])*SY+shY)*kk];
   sk.begin();const live=[],gp=1-S.gap/100;
   for(const f of s.faces){
@@ -273,11 +297,12 @@ function lzw(px){const out=[];let cur=0,nb=0;const emit=(c,s)=>{cur|=c<<nb;nb+=s
       if(next<4096)dict.set(key,next++);else{emit(256,size);dict=new Map();next=258;size=9}
       pre=k}}
   emit(pre,size);if(next>(1<<size)-1&&size<12)size++;emit(257,size);if(nb>0)out.push(cur&255);return out}
-function gifEncode(frames,W,H,delay,pal,transparent){
+function gifEncode(frames,W,H,delays,pal,transparent){
   const o=[71,73,70,56,57,97],w16=v=>o.push(v&255,(v>>8)&255);w16(W);w16(H);o.push(0xF7,0,0);
   for(let i=0;i<256;i++){const c=pal[i]||[0,0,0];o.push(c[0],c[1],c[2])}
   o.push(0x21,0xFF,11,78,69,84,83,67,65,80,69,50,46,48,3,1,0,0,0);
-  for(const fr of frames){
+  for(let i=0;i<frames.length;i++){
+    const fr=frames[i],delay=delays[i]??delays[0];
     o.push(0x21,0xF9,4,transparent?0x09:0x08,delay&255,(delay>>8)&255,0,0,0x2C);w16(0);w16(0);w16(W);w16(H);o.push(0,8);
     const d=lzw(fr);for(let i=0;i<d.length;i+=255){const n=Math.min(255,d.length-i);o.push(n);for(let j=0;j<n;j++)o.push(d[i+j])}o.push(0);
   }
@@ -316,7 +341,8 @@ async function makeGIF(secs,fps,gw,transparent,onp){
     onp&&onp(i+1,N);if(i%2===1)await new Promise(r=>setTimeout(r))}
   const cycle=frames.slice();
   if(S.anim!=='lluviaCompleta')for(let i=forwardCount-2;i>0;i--)cycle.push(frames[i]);
-  return gifEncode(cycle,gw,gh,Math.round(100/fps),pal,useTransparency);
+  const totalDelay=Math.round(secs*100),delays=cycle.map((_,i)=>Math.floor((i+1)*totalDelay/cycle.length)-Math.floor(i*totalDelay/cycle.length));
+  return gifEncode(cycle,gw,gh,delays,pal,useTransparency);
 }
 let dl=null;try{window.claude&&window.claude.use('downloads').then(d=>{dl=d})}catch(e){}
 const msg=t=>{$('msg').textContent=t};
@@ -386,15 +412,19 @@ function buildUI(){
   const nt=document.createElement('div');nt.className='note';nt.textContent='Los valores se normalizan a 100 %. Los rayados pueden continuar entre celdas; las piezas lisas evitan repetir color junto a sus vecinas.';currentSection.appendChild(nt);
   sec('Malla isométrica',true);
   select('layout','Posición de la trama',PATTERNS,rebuild);
-  slider('cols','Tamaño de celda (columnas)',3,24,1,{rb:1});slider('shx','Desplazar malla en X',0,100,1,{rb:1,unit:' %'});slider('shy','Desplazar malla en Y',0,100,1,{rb:1,unit:' %'});
-  slider('gap','Separación entre caras',0,25,1,{unit:' %'});slider('casc','Cascada (vaciado)',0,100,1,{rb:1,unit:' %'});
+  slider('cols','Tamaño de celda (columnas)',3,24,1,{rb:1});slider('shx','Desplazamiento X',-100,100,1,{rb:1,unit:' %'});slider('shy','Desplazamiento Y',-100,100,1,{rb:1,unit:' %'});slider('shz','Desplazamiento Z',-100,100,1,{rb:1,unit:' %'});
+  slider('gap','Separación entre caras',0,25,1,{unit:' %'});slider('casc','Ocupación de la trama',0,100,1,{rb:1,unit:' %'});
   select('cdir','Dirección de la cascada',CASCADES,rebuild);
-  sec('Formato de la plantilla',true);
+  select('cpos','Posición de la cascada',CASCADE_POSITIONS,rebuild);
+  slider('cangle','Inclinación de la cascada',-45,45,1,{rb:1,unit:'°'});
+  const meshNote=document.createElement('div');meshNote.className='note';meshNote.textContent='0 % deja la trama vacía y 100 % ocupa toda la malla. La posición indica desde dónde nace la cascada; la inclinación gira su recorrido. X, Y y Z aceptan valores negativos para mover en ambos sentidos.';currentSection.appendChild(meshNote);
+  const compactUI=matchMedia('(max-width:820px)').matches;
+  sec('Formato de la plantilla',!compactUI);
   const fs=select('fmt','Formato',{...FORMATS,custom:'Personalizado'},()=>{if(S.fmt!=='custom'){S.W=FORMATS[S.fmt][1];S.H=FORMATS[S.fmt][2];$('iw').value=S.W;$('ih').value=S.H}fit();rebuild()});
   r=document.createElement('div');r.className='row';r.innerHTML=`<input type="number" id="iw" min="200" max="30000" value="${S.W}" aria-label="Ancho en píxeles"><input type="number" id="ih" min="200" max="30000" value="${S.H}" aria-label="Alto en píxeles">`;currentSection.appendChild(r);
   const ch=()=>{S.W=clamp(+$('iw').value||S.W,200,30000);S.H=clamp(+$('ih').value||S.H,200,30000);S.fmt='custom';fs.value='custom';fit();rebuild()};$('iw').onchange=$('ih').onchange=ch;
   r=document.createElement('div');r.className='note';r.textContent='Al cargar una foto se usa su tamaño original. Puedes cambiarlo aquí o elegir otro formato.';currentSection.appendChild(r);
-  sec('Fondo',true);
+  sec('Fondo',!compactUI);
   r=document.createElement('div');r.className='row';r.innerHTML=`<label class="f" style="margin:0"><span>Color de fondo</span><span></span></label>`;
   const bgc=document.createElement('input');bgc.type='color';bgc.value=S.bg;bgc.setAttribute('aria-label','Color de fondo');bgc.style.cssText='height:30px;width:100%;padding:0;border:1px solid var(--line);border-radius:6px;background:none';bgc.oninput=()=>{S.bg=bgc.value;scheduleFrame()};r.appendChild(bgc);currentSection.appendChild(r);
   r=document.createElement('div');r.className='row';r.innerHTML='<label class="f" style="margin:0"><span>Imagen de fondo</span><span></span></label>';const imageRow=r;
@@ -416,24 +446,24 @@ function buildUI(){
   sec('Colores');r=document.createElement('div');r.className='sw';
   const colorNames=['Rojo','Amarillo','Verde','Verde claro','Azul','Cian'];
   S.pal.forEach((c,i)=>{const k=document.createElement('input');k.type='color';k.value=c;k.setAttribute('aria-label',`Color de marca: ${colorNames[i]}`);k.oninput=()=>{S.pal[i]=k.value;scheduleFrame()};r.appendChild(k)});currentSection.appendChild(r);
-  sec('Presets y semilla',true);
+  sec('Guardar plantilla y ajustes',true);
   const seedLabel=document.createElement('label');seedLabel.className='f';seedLabel.innerHTML='<span>Semilla de composición</span><span></span>';
   const seedInput=document.createElement('input');seedInput.type='number';seedInput.min='0';seedInput.max='2147483647';seedInput.step='1';seedInput.value=S.seed;seedInput.setAttribute('aria-label','Semilla de composición');
   seedInput.onchange=()=>{S.seed=clamp(Math.floor(Number(seedInput.value)||0),0,2147483647);seedInput.value=S.seed;rebuild()};
   seedLabel.appendChild(seedInput);currentSection.appendChild(seedLabel);
-  r=document.createElement('div');r.className='row';r.innerHTML='<input id="presetname" type="text" maxlength="60" placeholder="Nombre del preset" aria-label="Nombre del preset"><button id="savepreset">Guardar preset</button>';currentSection.appendChild(r);
-  r=document.createElement('div');r.className='row';r.innerHTML='<select id="preset"><option value="">Selecciona un preset</option></select><button id="loadpreset">Cargar</button><button id="deletepreset">Eliminar</button>';currentSection.appendChild(r);
+  r=document.createElement('div');r.className='row';r.innerHTML='<input id="presetname" type="text" maxlength="60" placeholder="Nombre de la plantilla" aria-label="Nombre de la plantilla"><button id="savepreset">Guardar plantilla</button>';currentSection.appendChild(r);
+  r=document.createElement('div');r.className='row';r.innerHTML='<select id="preset"><option value="">Selecciona una plantilla</option></select><button id="loadpreset">Cargar</button><button id="deletepreset">Eliminar</button>';currentSection.appendChild(r);
   r=document.createElement('div');r.className='row';r.innerHTML='<button id="exportconfig">Exportar ajustes</button><button id="importconfigbutton">Importar ajustes</button><input id="importconfig" type="file" accept="application/json,.json" hidden>';currentSection.appendChild(r);
-  const presetNote=document.createElement('div');presetNote.className='note';presetNote.textContent='Los presets se guardan en este navegador. Exporta los ajustes para compartirlos o guardarlos como archivo.';currentSection.appendChild(presetNote);
+  const presetNote=document.createElement('div');presetNote.className='note';presetNote.textContent='Las plantillas se guardan en este navegador. Exporta los ajustes para compartirlos o guardarlos como archivo.';currentSection.appendChild(presetNote);
   const configInput=$('importconfig');
   const presetKey='trama-isometrica-presets-v1';
   function readPresets(){
     try{const parsed=JSON.parse(localStorage.getItem(presetKey)||'[]');return Array.isArray(parsed)?parsed.filter(p=>p&&typeof p.name==='string'&&p.config&&typeof p.config==='object'):[]}
-    catch(e){msg(`No se pudieron leer los presets: ${e instanceof Error?e.message:String(e)}`);return[]}
+    catch(e){msg(`No se pudieron leer las plantillas: ${e instanceof Error?e.message:String(e)}`);return[]}
   }
   function refreshPresets(){
     const selectPreset=$('preset'),selected=selectPreset.value;
-    selectPreset.replaceChildren(new Option('Selecciona un preset',''));
+    selectPreset.replaceChildren(new Option('Selecciona una plantilla',''));
     for(const preset of readPresets())selectPreset.add(new Option(preset.name,preset.name));
     if([...selectPreset.options].some(option=>option.value===selected))selectPreset.value=selected;
   }
@@ -448,8 +478,10 @@ function buildUI(){
     const config={...S,
       anim:choice('anim',Object.keys(ANIMS)),fmt:choice('fmt',[...Object.keys(FORMATS),'custom']),
       W:number('W',200,30000),H:number('H',200,30000),cols:number('cols',3,24),
-      shx:number('shx',0,100),shy:number('shy',0,100),gap:number('gap',0,25),casc:number('casc',0,100),
-      cdir:choice('cdir',Object.keys(CASCADES)),layout:choice('layout',Object.keys(PATTERNS)),
+      shx:number('shx',-100,100),shy:number('shy',-100,100),shz:c.shz===undefined?S.shz:number('shz',-100,100),
+      gap:number('gap',0,25),casc:number('casc',0,100),
+      cdir:choice('cdir',Object.keys(CASCADES)),cpos:c.cpos===undefined?S.cpos:choice('cpos',Object.keys(CASCADE_POSITIONS)),
+      cangle:c.cangle===undefined?S.cangle:number('cangle',-45,45),layout:choice('layout',Object.keys(PATTERNS)),
       wB:number('wB',0,100),wT:number('wT',0,100),wS:number('wS',0,100),wH:number('wH',0,100),wP:number('wP',0,100),
       batch:number('batch',1,20),intv:number('intv',.3,5),dur:number('dur',.4,3),
       seed:number('seed',0,2147483647),bgZoom:number('bgZoom',.5,3),bgRotation:number('bgRotation',-180,180),
@@ -471,33 +503,33 @@ function buildUI(){
     fit();rebuild();scheduleFrame();if(!S.bgImageData)msg('Ajustes cargados.');
   }
   function savePreset(){
-    const clean=$('presetname').value.trim();if(!clean){msg('Escribe un nombre para el preset.');return}
+    const clean=$('presetname').value.trim();if(!clean){msg('Escribe un nombre para la plantilla.');return}
     try{const presets=readPresets(),index=presets.findIndex(p=>p.name===clean);
       const preset={name:clean,config:configSnapshot()};if(index>=0)presets[index]=preset;else presets.push(preset);
-      localStorage.setItem(presetKey,JSON.stringify(presets));refreshPresets();$('preset').value=clean;msg(`Preset «${clean}» ${index>=0?'actualizado':'guardado'}.`);
-    }catch(e){msg(`No se pudo guardar el preset: ${e instanceof Error?e.message:String(e)}`)}
+      localStorage.setItem(presetKey,JSON.stringify(presets));refreshPresets();$('preset').value=clean;msg(`Plantilla «${clean}» ${index>=0?'actualizada':'guardada'}.`);
+    }catch(e){msg(`No se pudo guardar la plantilla: ${e instanceof Error?e.message:String(e)}`)}
   }
   $('savepreset').onclick=savePreset;
-  $('loadpreset').onclick=()=>{const preset=readPresets().find(p=>p.name===$('preset').value);if(!preset){msg('Selecciona un preset para cargar.');return}try{applyConfig(preset.config)}catch(e){msg(`No se pudo cargar el preset: ${e instanceof Error?e.message:String(e)}`)}};
-  $('deletepreset').onclick=()=>{const name=$('preset').value;if(!name){msg('Selecciona un preset para eliminar.');return}
-    try{localStorage.setItem(presetKey,JSON.stringify(readPresets().filter(p=>p.name!==name)));refreshPresets();msg(`Preset «${name}» eliminado.`)}
-    catch(e){msg(`No se pudo eliminar el preset: ${e instanceof Error?e.message:String(e)}`)}};
+  $('loadpreset').onclick=()=>{const preset=readPresets().find(p=>p.name===$('preset').value);if(!preset){msg('Selecciona una plantilla para cargar.');return}try{applyConfig(preset.config)}catch(e){msg(`No se pudo cargar la plantilla: ${e instanceof Error?e.message:String(e)}`)}};
+  $('deletepreset').onclick=()=>{const name=$('preset').value;if(!name){msg('Selecciona una plantilla para eliminar.');return}
+    try{localStorage.setItem(presetKey,JSON.stringify(readPresets().filter(p=>p.name!==name)));refreshPresets();msg(`Plantilla «${name}» eliminada.`)}
+    catch(e){msg(`No se pudo eliminar la plantilla: ${e instanceof Error?e.message:String(e)}`)}};
   $('exportconfig').onclick=()=>save(fileName('json'),new Blob([JSON.stringify({version:1,config:configSnapshot()},null,2)],{type:'application/json'}));
   $('importconfigbutton').onclick=()=>configInput.click();
   configInput.onchange=()=>{const file=configInput.files?.[0];if(!file)return;const reader=new FileReader();
     reader.onerror=()=>msg('No se pudo leer el archivo de ajustes.');
     reader.onload=()=>{try{applyConfig(JSON.parse(String(reader.result)))}catch(e){msg(`No se pudieron importar los ajustes: ${e instanceof Error?e.message:String(e)}`)}finally{configInput.value=''}};
     reader.readAsText(file)};
-  sec('Exportar',true);
+  sec('Exportar',!compactUI);
   const filenameLabel=document.createElement('label');filenameLabel.className='f';filenameLabel.innerHTML='<span>Nombre de archivo</span><span></span>';
   const filenameInput=document.createElement('input');filenameInput.type='text';filenameInput.value=S.filename;filenameInput.maxLength=80;filenameInput.setAttribute('aria-label','Nombre de archivo');
   filenameInput.oninput=()=>{S.filename=filenameInput.value};filenameLabel.appendChild(filenameInput);currentSection.appendChild(filenameLabel);
   r=document.createElement('div');r.className='row';r.innerHTML='<button id="esvg">SVG</button><button id="epng">PNG</button>';currentSection.appendChild(r);
-  r=document.createElement('div');r.className='row';r.innerHTML=`<select id="gs"><option value="4">4 s</option><option value="6" selected>6 s</option><option value="8">8 s</option><option value="12">12 s</option></select><select id="gf"><option value="10">10 fps</option><option value="15" selected>15 fps</option><option value="30">30 fps</option></select><select id="gw"><option value="480">480 px</option><option value="720" selected>720 px</option><option value="960">960 px</option></select>`;currentSection.appendChild(r);
+  r=document.createElement('div');r.className='row';r.innerHTML=`<select id="gs"><option value="4">4 s</option><option value="6" selected>6 s</option><option value="8">8 s</option><option value="12">12 s</option></select><select id="gf"><option value="10">10 fps</option><option value="15">15 fps</option><option value="30" selected>30 fps</option></select><select id="gw"><option value="480">480 px</option><option value="720" selected>720 px</option><option value="960">960 px</option></select>`;currentSection.appendChild(r);
   r=document.createElement('div');r.className='row';r.innerHTML='<button id="egif" class="p">Descargar GIF animado</button>';currentSection.appendChild(r);
   r=document.createElement('div');r.id='msg';currentSection.appendChild(r);
   refreshPresets();
-  r=document.createElement('div');r.className='note';r.textContent='PNG y SVG guardan el fotograma actual. El GIF se adapta al movimiento elegido y admite transparencia.';currentSection.appendChild(r);
+  r=document.createElement('div');r.className='note';r.textContent='PNG y SVG guardan el fotograma actual. El GIF se repite en bucle y ajusta la duración seleccionada, también a 30 fps.';currentSection.appendChild(r);
   updatePlayButton();
   $('bp').onclick=()=>{if(playing){pauseRequested=true;updatePlayButton();scheduleFrame()}else{
     if(S.anim==='lluviaCompleta'&&sc.faces.every(f=>!f.intro)){rebuild();return}
