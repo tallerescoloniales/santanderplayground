@@ -344,6 +344,73 @@ async function makeGIF(secs,fps,gw,transparent,onp){
   const totalDelay=Math.round(secs*100),delays=cycle.map((_,i)=>Math.floor((i+1)*totalDelay/cycle.length)-Math.floor(i*totalDelay/cycle.length));
   return gifEncode(cycle,gw,gh,delays,pal,useTransparency);
 }
+function supportedVideoFormats(){
+  if(typeof MediaRecorder==='undefined'||typeof HTMLCanvasElement.prototype.captureStream!=='function')return[];
+  const formats=[
+    {mime:'video/mp4;codecs=avc1.42E01E',extension:'mp4',label:'MP4'},
+    {mime:'video/mp4',extension:'mp4',label:'MP4'},
+    {mime:'video/webm;codecs=vp9',extension:'webm',label:'WebM'},
+    {mime:'video/webm;codecs=vp8',extension:'webm',label:'WebM'},
+    {mime:'video/webm',extension:'webm',label:'WebM'}
+  ];
+  return[formats.find(format=>MediaRecorder.isTypeSupported(format.mime))].filter(Boolean);
+}
+async function makeVideo(secs,fps,gw,mime,onp){
+  if(typeof MediaRecorder==='undefined'||typeof HTMLCanvasElement.prototype.captureStream!=='function')
+    throw new Error('Este navegador no permite grabar vídeo del lienzo.');
+  const gh=Math.round(gw*S.H/S.W),canvas=document.createElement('canvas');canvas.width=gw;canvas.height=gh;
+  const context=canvas.getContext('2d');if(!context)throw new Error('No se pudo preparar el lienzo de vídeo.');
+  const sim=build();sim.faces.forEach((face,i)=>{if(sc.faces[i])face.st=sc.faces[i].st});
+  if(S.anim==='lluviaCompleta'){
+    prepareCompleteRain(sim);
+    secs=Math.max(secs,Math.min(2.4,Math.max(.8,S.intv*1.2))+S.dur+.5);
+  }
+  const sink=canvasSink(context,gw,gh,S.bg,S.bgImage);
+  let stream=canvas.captureStream(0),track=stream.getVideoTracks()[0],manualCapture=typeof track?.requestFrame==='function';
+  if(!manualCapture){stream.getTracks().forEach(item=>item.stop());stream=canvas.captureStream(fps);track=stream.getVideoTracks()[0]}
+  if(!stream.getVideoTracks().length){stream.getTracks().forEach(track=>track.stop());throw new Error('El navegador no pudo iniciar la captura del lienzo.')}
+  let recorder;
+  try{recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:Math.round(gw*gh*fps*.12)})}
+  catch(error){stream.getTracks().forEach(track=>track.stop());throw new Error(`No se pudo iniciar el formato de vídeo seleccionado: ${error instanceof Error?error.message:String(error)}`)}
+  return new Promise((resolve,reject)=>{
+    const chunks=[];let timer=0,startedAt=0,lastProgress=0,settled=false,stopRequested=false;
+    const cleanup=()=>{if(timer)clearTimeout(timer);stream.getTracks().forEach(item=>item.stop())};
+    const fail=error=>{if(settled)return;settled=true;cleanup();reject(error instanceof Error?error:new Error('Falló la grabación del vídeo.'))};
+    const drawAt=time=>{step(sim,time,true);render(sink,gw,gh,time,sim)};
+    const finish=()=>{if(stopRequested||recorder.state==='inactive')return;stopRequested=true;
+      try{timer=setTimeout(()=>{if(recorder.state!=='inactive')recorder.stop()},100)}catch(error){fail(error)}};
+    recorder.ondataavailable=event=>{if(event.data.size)chunks.push(event.data)};
+    recorder.onerror=event=>fail(event.error||new Error('La grabación de vídeo se interrumpió.'));
+    recorder.onstop=()=>{if(settled)return;settled=true;cleanup();
+      const blob=new Blob(chunks,{type:recorder.mimeType||mime});
+      if(!blob.size){reject(new Error('El navegador no generó ningún dato de vídeo.'));return}
+      resolve(blob)};
+    try{drawAt(0);recorder.start(250);startedAt=performance.now();if(manualCapture)track.requestFrame();
+      const capture=()=>{
+        const now=performance.now();
+        const elapsed=Math.min(secs,Math.max(0,(now-startedAt)/1000));
+        drawAt(elapsed);
+        if(manualCapture)track.requestFrame();
+        if(now-lastProgress>=250||elapsed>=secs){lastProgress=now;onp&&onp(elapsed,secs)}
+        if(elapsed>=secs){finish();return}
+        timer=setTimeout(capture,Math.max(1,1000/fps-(performance.now()-now)));
+      };
+      timer=setTimeout(capture,1000/fps);
+    }catch(error){fail(error)}
+  });
+}
+async function validateVideo(blob){
+  const url=URL.createObjectURL(blob),video=document.createElement('video');video.preload='metadata';video.src=url;
+  try{
+    await new Promise((resolve,reject)=>{
+      const timeout=setTimeout(()=>reject(new Error('El navegador no pudo validar el vídeo generado.')),8000);
+      video.onloadedmetadata=()=>{clearTimeout(timeout);resolve()};
+      video.onerror=()=>{clearTimeout(timeout);reject(new Error('El navegador no puede reproducir el vídeo generado. Prueba otro formato.'))};
+    });
+    if(!Number.isFinite(video.duration)||!video.videoWidth||!video.videoHeight)
+      throw new Error('El vídeo generado no contiene fotogramas reproducibles.');
+  }finally{video.removeAttribute('src');video.load();video.remove();URL.revokeObjectURL(url)}
+}
 let dl=null;try{window.claude&&window.claude.use('downloads').then(d=>{dl=d})}catch(e){}
 const msg=t=>{$('msg').textContent=t};
 function scheduleFrame(){if(frameId)cancelAnimationFrame(frameId);frameId=requestAnimationFrame(frame)}
@@ -527,9 +594,17 @@ function buildUI(){
   r=document.createElement('div');r.className='row';r.innerHTML='<button id="esvg">SVG</button><button id="epng">PNG</button>';currentSection.appendChild(r);
   r=document.createElement('div');r.className='row';r.innerHTML=`<select id="gs"><option value="4">4 s</option><option value="6" selected>6 s</option><option value="8">8 s</option><option value="12">12 s</option></select><select id="gf"><option value="10">10 fps</option><option value="15">15 fps</option><option value="30" selected>30 fps</option></select><select id="gw"><option value="480">480 px</option><option value="720" selected>720 px</option><option value="960">960 px</option></select>`;currentSection.appendChild(r);
   r=document.createElement('div');r.className='row';r.innerHTML='<button id="egif" class="p">Descargar GIF animado</button>';currentSection.appendChild(r);
+  r=document.createElement('div');r.className='row';r.innerHTML='<select id="vfmt" aria-label="Formato de vídeo"></select><button id="evideo">Descargar vídeo</button>';currentSection.appendChild(r);
+  const videoFormats=supportedVideoFormats(),videoFormatSelect=$('vfmt'),videoButton=$('evideo');
+  for(const format of videoFormats)if(![...videoFormatSelect.options].some(option=>option.value===format.mime.split(';')[0]))
+    videoFormatSelect.add(new Option(format.label,format.mime));
+  if(videoFormats.length){videoFormatSelect.value=videoFormats[0].mime}
+  else{videoFormatSelect.disabled=true;videoButton.disabled=true;videoButton.title='La grabación de vídeo no está disponible en este navegador.'}
   r=document.createElement('div');r.id='msg';currentSection.appendChild(r);
   refreshPresets();
-  r=document.createElement('div');r.className='note';r.textContent='PNG y SVG guardan el fotograma actual. El GIF se repite en bucle y ajusta la duración seleccionada, también a 30 fps.';currentSection.appendChild(r);
+  r=document.createElement('div');r.className='note';r.textContent=videoFormats.length
+    ?'PNG y SVG guardan el fotograma actual. El GIF se repite en bucle; el vídeo graba la animación durante el tiempo y a los fotogramas seleccionados. El vídeo usa el color de fondo para evitar transparencias incompatibles.'
+    :'PNG y SVG guardan el fotograma actual. El GIF se repite en bucle. Este navegador no permite exportar vídeo.';currentSection.appendChild(r);
   updatePlayButton();
   $('bp').onclick=()=>{if(playing){pauseRequested=true;updatePlayButton();scheduleFrame()}else{
     if(S.anim==='lluviaCompleta'&&sc.faces.every(f=>!f.intro)){rebuild();return}
@@ -540,6 +615,12 @@ function buildUI(){
   $('egif').onclick=async()=>{const b=$('egif');b.disabled=true;
     try{const blob=await makeGIF(+$('gs').value,+$('gf').value,+$('gw').value,S.transp,(i,n)=>msg(`Grabando GIF… ${Math.round(i/n*100)} %`));await save(fileName('gif'),blob)}
     catch(e){msg(`No se pudo crear el GIF: ${e instanceof Error?e.message:String(e)}`)}finally{b.disabled=false}};
+  $('evideo').onclick=async()=>{const button=$('evideo');button.disabled=true;
+    try{const format=videoFormats.find(candidate=>candidate.mime===$('vfmt').value);if(!format)throw new Error('Selecciona un formato de vídeo compatible.');
+      const blob=await makeVideo(+$('gs').value,+$('gf').value,+$('gw').value,format.mime,(elapsed,total)=>msg(`Grabando vídeo… ${Math.round(elapsed/total*100)} %`));
+      msg('Comprobando el vídeo generado…');await validateVideo(blob);
+      await save(fileName(format.extension),blob)}
+    catch(e){msg(`No se pudo crear el vídeo: ${e instanceof Error?e.message:String(e)}`)}finally{button.disabled=false}};
 }
 let last=performance.now();
 function frame(now){
