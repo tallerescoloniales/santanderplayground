@@ -2,13 +2,6 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-P7KL7NVS');</script>
-  <!-- End Google Tag Manager -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Santander Playground | Cartografías lúdicas en Santander</title>
   <meta name="description" content="Santander Playground convierte colegio, barrio y parque en espacios para jugar, explorar y construir. Descubre las Cartografías Lúdicas de Santander.">
@@ -38,14 +31,10 @@
 </head>
 <body>
 
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P7KL7NVS"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-
   <div class="spg-progress" aria-hidden="true"><span id="spg-progress-bar"></span></div>
 
-  <header class="spg-header" id="top">
+  <div id="top" aria-hidden="true"></div>
+  <header class="spg-header">
     <div class="spg-inner spg-header-in">
       <a class="spg-logo" href="#top" aria-label="Santander Playground, volver arriba">
         <img class="spg-logo-img" src="img/logo-santander-playground.png" alt="Santander Playground" width="187" height="36">
@@ -306,12 +295,12 @@
                 <em class="spg-t-val">Ceip. Quinta Porrúa</em>
               </p>
               <p>
-                <span class="spg-t-row">📍 Zona urbana <small class="spg-t-date">28 noviembre</small></span>
-                <em class="spg-t-val">Barrio Porrúa (canchas)</em>
+                <span class="spg-t-row">📍 Zona urbana <small class="spg-t-date">5 diciembre</small></span>
+                <em class="spg-t-val">Pistas Barrio Porrúa</em>
               </p>
               <p>
-                <span class="spg-t-row">🌳 Parque / plaza <small class="spg-t-date">21 noviembre</small></span>
-                <em class="spg-t-val">Parque Mendicouague</em>
+                <span class="spg-t-row">🌳 Parque / plaza <small class="spg-t-date">4 diciembre</small></span>
+                <em class="spg-t-val">Plaza de Bº San Francisco</em>
               </p>
             </div>
           </article>
@@ -332,7 +321,7 @@
               </p>
               <p>
                 <span class="spg-t-row">📍 Zona urbana <small class="spg-t-date">19 diciembre</small></span>
-                <em class="spg-t-val">Biblioteca Central o Tabacalera</em>
+                <em class="spg-t-val">Biblioteca Central</em>
               </p>
             </div>
           </article>
@@ -600,10 +589,24 @@
       </p>
       <p class="spg-footer-legal">
         <span>Información legal disponible bajo solicitud</span>
+        <button class="spg-cookie-settings" id="spg-cookie-settings" type="button">Configurar cookies</button>
       </p>
       <p class="spg-footer-copy">Un proyecto de Coloniales · Espacios de aprendizaje · Santander · © 2026</p>
     </div>
   </footer>
+
+  <section class="spg-cookie-banner" id="spg-cookie-banner" aria-label="Preferencias de cookies" hidden>
+    <div class="spg-cookie-content">
+      <div>
+        <h2>Tu privacidad importa</h2>
+        <p>Usamos Google Analytics para conocer el uso de esta web. Solo se activará si aceptas las cookies analíticas; puedes cambiar tu decisión cuando quieras desde el pie de página.</p>
+      </div>
+      <div class="spg-cookie-actions">
+        <button class="spg-cookie-reject" id="spg-cookie-reject" type="button">Rechazar</button>
+        <button class="spg-cookie-accept" id="spg-cookie-accept" type="button">Aceptar analíticas</button>
+      </div>
+    </div>
+  </section>
 
   <script src="vendor/leaflet.js"></script>
   <script src="mapa-colegios.js"></script>
